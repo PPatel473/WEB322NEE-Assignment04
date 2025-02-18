@@ -17,13 +17,15 @@ const path = require("path"); // Import path for serving HTML files
 
 // Create an Express app
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;  // Use dynamic PORT from Vercel
 
-// Initialize the data service
+// Initialize the data service before starting the server
 dataService.initialize()
     .then(() => {
         console.log("Data service initialized successfully.");
-        startServer(); // Start server once data service is initialized
+        app.listen(PORT, () => {
+            console.log(`Server running on http://localhost:${PORT}`);
+        });
     })
     .catch(err => {
         console.error("Failed to initialize data service: ", err);
