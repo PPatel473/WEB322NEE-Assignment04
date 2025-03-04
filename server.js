@@ -10,37 +10,29 @@
 *
 ********************************************************************************/
 
-// Import required modules
 const express = require("express");
-const dataService = require("./modules/data-service");
-const path = require("path"); // Import path for serving HTML files
+const path = require("path");
 
-// Create an Express app
 const app = express();
-const PORT = process.env.PORT || 8080;  // Use dynamic PORT from Vercel
 
-// Initialize the data service before starting the server
-dataService.initialize()
-    .then(() => {
-        console.log("Data service initialized successfully.");
-        app.listen(PORT, () => {
-            console.log(`Server running on http://localhost:${PORT}`);
-        });
-    })
-    .catch(err => {
-        console.error("Failed to initialize data service: ", err);
-        process.exit(1);
-    });
+// Set EJS as the view engine
+app.set("view engine", "ejs");
 
-// Middleware to serve static files (like CSS, images, etc.)
-app.use(express.static(path.join(__dirname, 'public')));
+// Set up static file serving
+app.use(express.static(path.join(__dirname, "public")));
 
-// Define routes
+// Routes
+app.get("/", (req, res) => res.render("home"));
+app.get("/about", (req, res) => res.render("about"));
+app.use((req, res) => res.status(404).render("404", { message: "Page not found" }));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
 
 // Default route (root) - Serve home.html
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "/views/home.html"));
-});
+res.render("home");
 
 // About page route
 app.get("/about", (req, res) => {
@@ -94,10 +86,14 @@ app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, "/views/404.html"));
 });
 
-// Start the server
-function startServer() {
-    console.log("Initializing the server...");
-    app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
+// Initialize the data service before starting the server
+dataService.initialize()
+    .then(() => {
+        console.log("Data service initialized successfully.");
+    })
+    .catch(err => {
+        console.error("Failed to initialize data service: ", err);
     });
-}
+
+// Export app for Vercel
+module.exports = app;
