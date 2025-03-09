@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Collection</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        /* Ensure the image container has a fixed height */
+        .image-container {
+            height: 150px; /* Adjust this value as needed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Ensure the image fits within the container */
+        .image-container img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* Ensure all rows have the same height */
+        .table-row {
+            height: 150px; /* Adjust this value to match the image container height */
+        }
+    </style>
+</head>
+<body tabindex="-1">
+    <%- include('partials/navbar', { page: 'sites' }) %>
+
+    <br />
+
+    <div class="container mx-auto p-4">
+        <div class="hero bg-base-200 rounded-lg p-6">
+            <div class="hero-content text-center">
+                <div class="max-w-md">
+                    <h1 class="text-5xl font-bold">Site Collection</h1>
+                    <p class="py-6">
+                        Browse all National Historic Sites. Click buttons to filter sites by region, e.g.,
+                        <a href="/sites?region=Atlantic Region" class="btn btn-primary mt-2 btn-xs">Atlantic Region</a>
+                        <a href="/sites?region=Central Canada" class="btn btn-primary mt-2 btn-xs">Central Canada</a>
+                        <a href="/sites?region=Prairie Provinces" class="btn btn-primary mt-2 btn-xs">Prairie Provinces</a>
+                        <br> or by province or territory, e.g.,
+                        <a href="/sites?provinceOrTerritory=Ontario" class="btn btn-primary mt-2 btn-xs">Ontario</a>
+                        <a href="/sites?provinceOrTerritory=Quebec" class="btn btn-primary mt-2 btn-xs">Quebec</a>
+                        <a href="/sites?provinceOrTerritory=Yukon" class="btn btn-primary mt-2 btn-xs">Yukon</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <!-- Sites Table -->
+        <% if (sites.length > 0) { %>
+            <div class="overflow-x-auto overflow-y-hidden">
+                <table class="table table-zebra table-fixed w-full">
+                    <thead class="bg-base-300">
+                        <tr>
+                            <th class="text-lg">Site</th>
+                            <th class="text-lg">Information</th>
+                            <th class="text-lg">Location</th>
+                            <th class="text-lg">Region</th>
+                            <th class="text-lg">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% sites.forEach(function(site) { %>
+                            <tr class="table-row">
+                                <!-- Image column -->
+                                <td class="p-5">
+                                    <div class="image-container">
+                                        <img
+                                            src="<%= site.image || '/images/placeholder.jpg' %>"
+                                            alt="<%= site.site || 'Historic Site' %>"
+                                            class="rounded-lg"
+                                        >
+                                    </div>
+                                </td>
+
+                                <!-- Site Name -->
+                                <td class="p-5">
+                                    <p class="text-base">
+                                        <div class="font-bold text-lg"><%= site.site %></div>
+                                    </p>
+                                </td>
+
+                                <!-- Site Information -->
+                                <td class="p-5">
+                                    <p class="text-base">
+                                        <span class="font-bold">Date:</span> <%= site.date %> (<%= site.dateType %>)
+                                        <br>
+                                        <span class="font-bold">Designated:</span> <%= site.designated %>
+                                    </p>
+                                </td>
+
+                                <!-- Location -->
+                                <td class="p-5">
+                                    <div class="flex flex-col space-y-1">
+                                        <span class="text-base font-bold"><%= site.location %></span>
+                                        <% if (site.provinceOrTerritoryObj) { %>
+                                            <a href="/sites?provinceOrTerritory=<%= site.provinceOrTerritoryObj.name %>" 
+                                               class="badge badge-primary badge-lg hover:badge-outline btn btn-primary mt-2 btn-xs">
+                                                <%= site.provinceOrTerritoryObj.name %>
+                                            </a>
+                                        <% } %>
+                                    </div>
+                                </td>
+
+                                <!-- Region -->
+                                <td class="p-5">
+                                    <% if (site.provinceOrTerritoryObj) { %>
+                                        <a href="/sites?region=<%= site.provinceOrTerritoryObj.region %>" 
+                                           class="badge badge-secondary badge-lg hover:badge-outline btn btn-primary mt-2 btn-xs">
+                                            <%= site.provinceOrTerritoryObj.region %>
+                                        </a>
+                                    <% } %>
+                                </td>
+
+                                <!-- View Details -->
+                                <td class="p-5">
+                                    <a href="/sites/<%= site.siteId %>" class="btn btn-primary mt-2 btn-xs">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="alert alert-warning mt-8 flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span class="ml-2">No sites found matching your criteria</span>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

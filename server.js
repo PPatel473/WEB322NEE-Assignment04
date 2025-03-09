@@ -1,5 +1,5 @@
 /********************************************************************************
-*  WEB322 – Assignment 03
+*  WEB322 – Assignment 04
 * 
 *  I declare that this assignment is my own work in accordance with Seneca's
 *  Academic Integrity Policy:
@@ -12,6 +12,7 @@
 
 const express = require("express");
 const path = require("path");
+const dataService = require("./data-service"); // Ensure this module exists and is implemented correctly
 
 const app = express();
 
@@ -22,78 +23,66 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
-app.get("/", (req, res) => res.render("home"));
-app.get("/about", (req, res) => res.render("about"));
-app.use((req, res) => res.status(404).render("404", { message: "Page not found" }));
+app.get("/", (req, res) => res.render("home", { page: "home" }));
+app.get("/about", (req, res) => res.render("about", { page: "about" }));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
-
-// Default route (root) - Serve home.html
-res.render("home");
-
-// About page route
-app.get("/about", (req, res) => {
-    res.sendFile(path.join(__dirname, "/views/about.html"));
-});
-
-// Route to get all sites (returns JSON)
+// Route to get all sites and filter by region or province/territory
 app.get("/sites", async (req, res) => {
     try {
         const { region, provinceOrTerritory } = req.query;
+        let sites;
 
-        if (region) {
-            const sites = await dataService.getSitesByRegion(region);
-            if (sites.length === 0) {
-                res.status(404).send("No sites found for the given region.");
-            } else {
-                res.json(sites);
-            }
-        } else if (provinceOrTerritory) {
-            const sites = await dataService.getSitesByProvinceOrTerritoryName(provinceOrTerritory);
-            if (sites.length === 0) {
-                res.status(404).send("No sites found for the given province/territory.");
-            } else {
-                res.json(sites);
-            }
+        if (region?.trim()) {
+            sites = await dataService.getSitesByRegion(region.trim());
+        } else if (provinceOrTerritory?.trim()) {
+            sites = await dataService.getSitesByProvinceOrTerritoryName(provinceOrTerritory.trim());
         } else {
-            const sites = await dataService.getAllSites();
-            res.json(sites);
+            sites = await dataService.getAllSites();
         }
+
+        if (!sites || sites.length === 0) {
+            return res.status(404).render("404", { page: "sites", message: "No sites found." });
+        }
+
+        res.render("sites", { page: "sites", sites });
     } catch (err) {
-        res.status(500).send("Error fetching site data: " + err);
+        console.error("Error fetching site data: ", err);
+        res.status(500).render("404", { page: "sites", message: "Error fetching site data: " + err.message });
     }
 });
 
-// Route to get a site by dynamic ID (example: /sites/AB001)
+// Route to get a site by ID
 app.get("/sites/:id", async (req, res) => {
     try {
-        const site = await dataService.getSiteById(req.params.id);
+        const siteId = req.params.id;
+        const site = await dataService.getSiteById(siteId);
+
         if (!site) {
-            res.status(404).send("Site not found");
-        } else {
-            res.json(site);
+            return res.status(404).render("404", { page: "sites", message: "Site not found." });
         }
+
+        res.render("site", { page: "sites", site });
     } catch (err) {
-        res.status(404).send("Error fetching site by ID: " + err);
+        console.error("Error fetching site by ID: ", err);
+        res.status(500).render("404", { page: "sites", message: "Error fetching site by ID: " + err.message });
     }
 });
 
-// Handle 404 errors by serving the 404.html page
+// Handle 404 errors for unmatched routes
 app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, "/views/404.html"));
+    res.status(404).render("404", { page: "error", message: "Page not found" });
 });
 
-// Initialize the data service before starting the server
+// Initialize data service before starting server
 dataService.initialize()
     .then(() => {
         console.log("Data service initialized successfully.");
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     })
     .catch(err => {
         console.error("Failed to initialize data service: ", err);
     });
 
-// Export app for Vercel
+// Export app for deployment
 module.exports = app;

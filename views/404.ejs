@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 - Not Found</title>
+  <title>National Historic Sites</title>
   <link rel="stylesheet" href="/css/main.css" />
-</head>
-<body>
-  <!-- Include Navbar Partial -->
-  <%- include('partials/navbar', { page: '' }) %>
 
-  <div class="container mx-auto text-center">
-    <!-- Hero Section -->
-    <div class="hero bg-red-500 text-white p-6 rounded-lg">
-      <h1 class="text-5xl font-bold">404 - Page Not Found</h1>
-      <p class="mt-4">Sorry, we couldn't find what you were looking for.</p>
-      <a href="/" class="btn btn-primary mt-6">Return Home</a>
+</head>
+
+<body tabindex="-1">
+  <%- include('partials/navbar', { page: '/404' }) %>
+
+  <div class="container mx-auto">
+
+    <div class="hero bg-base-200 rounded-lg p-6">
+      <div class="hero-content text-center ">
+        <div class="max-w-md">
+          <h1 class="text-5xl font-bold">404</h1>
+          <%= message || "I'm sorry, we're unable to find what you're looking for." %>
+
+          
+        </div>
+      </div>
     </div>
+
+    <br />
   </div>
+
 </body>
+
 </html>
