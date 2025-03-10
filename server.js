@@ -19,7 +19,7 @@ const app = express();
 // Set EJS as the view engine
 app.set("view engine", "ejs");
 
-// Set up static file serving
+// Set up static file serving for CSS, JS, images, etc.
 app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
@@ -47,7 +47,7 @@ app.get("/sites", async (req, res) => {
         res.render("sites", { page: "sites", sites });
     } catch (err) {
         console.error("Error fetching site data: ", err);
-        res.status(500).render("404", { page: "sites", message: "Error fetching site data: " + err.message });
+        res.status(500).render("404", { page: "sites", message: `Error fetching site data: ${err.message}` });
     }
 });
 
@@ -64,7 +64,7 @@ app.get("/sites/:id", async (req, res) => {
         res.render("site", { page: "sites", site });
     } catch (err) {
         console.error("Error fetching site by ID: ", err);
-        res.status(500).render("404", { page: "sites", message: "Error fetching site by ID: " + err.message });
+        res.status(500).render("404", { page: "sites", message: `Error fetching site by ID: ${err.message}` });
     }
 });
 
