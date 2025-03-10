@@ -20,7 +20,8 @@ const app = express();
 app.set("view engine", "ejs");
 
 // Set up static file serving for CSS, JS, images, etc.
-app.use(express.static(path.join(__dirname, "../public")));
+// Serve static files from the "public" folder
+app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.get("/", (req, res) => res.render("home", { page: "home" }));
@@ -77,10 +78,12 @@ app.use((req, res) => {
 dataService.initialize()
     .then(() => {
         console.log("Data service initialized successfully.");
+        const PORT = process.env.PORT || 3000; // Use a default port or environment port
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
     })
     .catch(err => {
         console.error("Failed to initialize data service: ", err);
     });
 
-// Export the Express app as a serverless function handler
-module.exports = app;
