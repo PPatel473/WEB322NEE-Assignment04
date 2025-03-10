@@ -12,7 +12,7 @@
 
 const express = require("express");
 const path = require("path");
-const dataService = require("../data-service"); // Ensure this module exists and is implemented correctly
+const dataService = require("./data-service"); // Ensure this module exists and is implemented correctly
 
 const app = express();
 
