@@ -12,7 +12,7 @@
 
 const express = require("express");
 const path = require("path");
-const dataService = require("./data-service"); // Ensure this module exists and is implemented correctly
+const dataService = require("../data-service"); // Ensure this module exists and is implemented correctly
 
 const app = express();
 
@@ -20,7 +20,7 @@ const app = express();
 app.set("view engine", "ejs");
 
 // Set up static file serving for CSS, JS, images, etc.
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 
 // Routes
 app.get("/", (req, res) => res.render("home", { page: "home" }));
@@ -77,12 +77,10 @@ app.use((req, res) => {
 dataService.initialize()
     .then(() => {
         console.log("Data service initialized successfully.");
-        const PORT = process.env.PORT || 3000;
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     })
     .catch(err => {
         console.error("Failed to initialize data service: ", err);
     });
 
-// Export app for deployment
+// Export the Express app as a serverless function handler
 module.exports = app;
