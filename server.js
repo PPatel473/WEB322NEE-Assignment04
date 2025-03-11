@@ -78,7 +78,7 @@ app.use((req, res) => {
 dataService.initialize()
     .then(() => {
         console.log("Data service initialized successfully.");
-        const PORT = process.env.PORT || 3000; // Use a default port or environment port
+        const PORT = process.env.PORT || 3001; // Use a default port or environment port
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });

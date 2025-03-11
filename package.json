@@ -9,7 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "tw:build": "tailwindcss -o public/css/main.css --watch"
+    "build": "tailwindcss -o public/css/main.css --minify",
+    "tw:build": "tailwindcss -o public/css/main.css --watch",
+    "tw:dev": "tailwindcss -o public/css/main.css --watch"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.0.6",
@@ -20,9 +22,9 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.21",
     "daisyui": "^4.12.23",
-    "postcss": "^8.5.2",
+    "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17"
   },
   "repository": {
