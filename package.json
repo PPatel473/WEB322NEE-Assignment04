@@ -1,21 +1,21 @@
 {
-  "name": "assignmnet-2",
+  "name": "assignment-2",
   "version": "1.0.0",
   "keywords": [],
   "license": "ISC",
   "author": "",
   "type": "commonjs",
-  "main": "data-service.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "build": "tailwindcss -o public/css/main.css --minify",
-    "tw:build": "tailwindcss -o public/css/main.css --watch",
-    "tw:dev": "tailwindcss -o public/css/main.css --watch"
+    "build": "npx tailwindcss -o public/css/main.css --minify",
+    "tw:build": "npx tailwindcss -o public/css/main.css --watch",
+    "tw:dev": "npx tailwindcss -o public/css/main.css --watch",
+    "vercel": "vercel dev"
   },
   "dependencies": {
-    "@tailwindcss/cli": "^4.0.6",
-    "@tailwindcss/vite": "^4.0.6",
+    "@parcel/watcher": "^2.5.1",
     "@vercel/speed-insights": "^1.2.0",
     "ejs": "^3.1.10",
     "express": "^4.21.2"

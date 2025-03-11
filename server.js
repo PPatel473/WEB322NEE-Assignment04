@@ -19,7 +19,6 @@ const app = express();
 // Set EJS as the view engine
 app.set("view engine", "ejs");
 
-// Set up static file serving for CSS, JS, images, etc.
 // Serve static files from the "public" folder
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -78,12 +77,10 @@ app.use((req, res) => {
 dataService.initialize()
     .then(() => {
         console.log("Data service initialized successfully.");
-        const PORT = process.env.PORT || 3001; // Use a default port or environment port
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-        });
     })
     .catch(err => {
         console.error("Failed to initialize data service: ", err);
     });
 
+// Export app for Vercel
+module.exports = app;
