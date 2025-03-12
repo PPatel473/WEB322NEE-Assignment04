@@ -1,15 +1,3 @@
-/********************************************************************************
-*  WEB322 – Assignment 04
-* 
-*  I declare that this assignment is my own work in accordance with Seneca's
-*  Academic Integrity Policy:
-* 
-*  https://www.senecacollege.ca/about/policies/academic-integrity-policy.html
-* 
-*  Name: Prince Prakashbhai Patel Student ID: 182063214 Date: 02/02/2025
-*
-********************************************************************************/
-
 const express = require("express");
 const path = require("path");
 const dataService = require("./data-service"); // Ensure this module exists and is implemented correctly
@@ -18,6 +6,9 @@ const app = express();
 
 // Set EJS as the view engine
 app.set("view engine", "ejs");
+
+// Set the views directory explicitly (if needed)
+app.set("views", path.join(__dirname, "views"));
 
 // Serve static files from the "public" folder
 app.use(express.static(path.join(__dirname, "public")));
@@ -77,6 +68,9 @@ app.use((req, res) => {
 dataService.initialize()
     .then(() => {
         console.log("Data service initialized successfully.");
+        app.listen(3000, () => {
+            console.log("Server is running on http://localhost:3000");
+        });
     })
     .catch(err => {
         console.error("Failed to initialize data service: ", err);
